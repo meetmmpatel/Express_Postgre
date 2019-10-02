@@ -13,3 +13,4 @@ app.listen(PORT, () => {
 });
 
 app.get("/getCustomers", db.getCustomers);
+app.get('/getOneCustomer/:id', db.getOneCustomer);

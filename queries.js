@@ -8,8 +8,8 @@ const pool = new Pool({
   port: 5432
 });
 
-const getCustomers = (req, res) => {
-  pool.query("Select * from customer order by first_name", (error, results) => {
+const getCities = (req, res) => {
+  pool.query("Select * from city order by city", (error, results) => {
     if (error) {
       throw error;
     }
@@ -17,15 +17,34 @@ const getCustomers = (req, res) => {
   });
 };
 
-const getOneCustomer = (req, res) => {
+const getOneCity = (req, res) => {
   const id = parseInt(req.params.id);
 
-  pool.query("Select * from customer where customer_id = $1", [id], (error, results) => {
-    if (error) {
-      throw error;
+  pool.query(
+    "Select * from city where city_id = $1",
+    [id],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      res.status(200).json(results.rows);
     }
-    res.status(200).json(results.rows);
-  });
+  );
 };
 
-module.exports = { getCustomers,getOneCustomer };
+const postCity = (req, res) => {
+  const { city, country_id, last_update } = req.body;
+  pool.query(
+    "Insert into city (city, country_id, last_update) values ($1,$2,$3) ",
+    [city, country_id, last_update],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+
+      res.status(201).send({ msg: "City has been created" });
+    }
+  );
+};
+
+module.exports = { getCities, getOneCity,postCity };
